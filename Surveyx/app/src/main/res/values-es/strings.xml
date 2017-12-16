@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- GLOBAL -->
+    <string name="app_name">SG Academy</string>
+    <string name="action_logout">Salir</string>
+    <string name="action_refresh">Actualizar</string>
+    <string name="title_activity_questionnaire_list">QuestionnaireListActivity</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="notification_title">¡Completa la encuesta ahora!</string>
+    <string name="global_next">Siguiente</string>
+    <string name="global_submit">Envíar</string>
+    <string name="global_close">Cerrar</string>
+    <string name="global_yes">Sí</string>
+    <string name="global_no">No</string>
+    <string name="app_id">1534287020156031</string>
+    <string name="question_mark">\?</string>
+
+    <!-- LOGIN -->
+
+
+    <!-- DIALOGS -->
+    <string name="dialog_gps_title">Activar GPS</string>
+    <string name="dialog_gps_message">Si no tienes la localización activada, no tendrás acceso a las encuestas geolocalizadas.</string>
+    <string name="dialog_gps_settings">Ajustes</string>
+    <string name="dialog_gps_cancel">Cancelar</string>
+    <string name="dialog_getting_surveys">Recuperando Encuestas...</string>
+    <string name="dialog_getting_survey">Recuperando Encuesta...</string>
+    <string name="dialog_finish_survey">Perderás todas las respuestas realizadas hasta el momento. ¿Realmente deseas finalizar la Encuesta?</string>
+    <string name="descriptor_dialog_error_button">dialogErrorButton</string>
+    <string name="descriptor_dialog_yes_button">dialogYesButton</string>
+    <string name="descriptor_dialog_no_button">dialogNoButton</string>
+    <string name="dialog_waiting_data">Esperando al listado de encuestas</string>
+    <string name="dialog_waiting_location">Esperando por la localización</string>
+
+    <!-- SURVEYS -->
+    <string name="question_label">Pregunta</string>
+    <string name="descriptor_survey_cancel_button">surveyCancelButton</string>
+    <string name="descriptor_survey_next_button">surveyNextButton</string>
+    <string name="title_activity_social_network">SocialNetworkActivity</string>
+    <string name="descriptor_survey_submit_button">surveySubmitButton</string>
+
+    <!-- SOCIAL NETWORKS -->
+    <string name="social_networks_thanks">¡Gracias!</string>
+    <string name="social_networks_survey_completed">La Encuesta ha sido completada correctamente.</string>
+    <string name="social_networks_discount">¡Gana un 5% de descuento en tu próximo producto!</string>
+    <string name="social_networks_share">¿Quieres compartir esta encuesta?</string>
+    <string name="social_networks_tweet">¡Acabo de completar una encuesta!</string>
+    <string name="social_networks_tweet_error">No se ha encontrado la aplicación de Twitter</string>
+    <string name="social_networks_facebook_post">¡Acabo de completar una encuesta!</string>
+    <string name="social_networks_facebook_error">No se ha encontrado la aplicación de Facebook</string>
+    <string name="social_networks_facebook_button">Compartir en Facebook</string>
+    <string name="social_networks_twitter_button">Compartir en Twitter</string>
+
+</resources>

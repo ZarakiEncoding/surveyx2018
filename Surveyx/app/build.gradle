@@ -1,0 +1,36 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+
+    defaultConfig {
+        applicationId "es.academy.solidgear.surveyx"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField "String", "WS_URL", '"http://api-academy.solidgear.es/"'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguaxjjrd-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.android.volley:volley:1.0.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:customtabs:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
+    compile "com.android.support:appcompat-v7:26.1.0"
+    compile 'com.google.android.gms:play-services-location:11.6.0'
+    compile 'com.google.android.gms:play-services-maps:11.6.0'
+    // Facebook Share only
+    compile 'com.facebook.android:facebook-share:4.28.0'
+}

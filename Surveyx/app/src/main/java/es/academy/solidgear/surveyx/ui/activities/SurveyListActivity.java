@@ -1,7 +1,8 @@
 package es.academy.solidgear.surveyx.ui.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,10 +11,10 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.academy.solidgear.surveyx.R;
@@ -36,7 +38,6 @@ import es.academy.solidgear.surveyx.model.SurveysModel;
 import es.academy.solidgear.surveyx.services.requests.GetAllSurveysRequest;
 import es.academy.solidgear.surveyx.ui.adapter.SurveyListAdapter;
 import es.academy.solidgear.surveyx.ui.fragments.ErrorDialogFragment;
-import es.academy.solidgear.surveyx.ui.fragments.ErrorFragment;
 import es.academy.solidgear.surveyx.ui.fragments.InformationDialogFragment;
 
 public class SurveyListActivity extends BaseActivity {
@@ -44,6 +45,7 @@ public class SurveyListActivity extends BaseActivity {
     private static final String TAG = "SurveyListActivity";
     public static final String EXTRA_TOKEN = "token";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private final static int MY_PERMISSIONS_REQUEST_LOCATION = 123;
 
     private RecyclerView mQuestionnaireList;
     private InformationDialogFragment mDialog;
@@ -53,12 +55,13 @@ public class SurveyListActivity extends BaseActivity {
 
     private Boolean mGpsEnabled;
     private Boolean mAskedEnableGps = false;
+    private Boolean mRequestedRuntimePermissions = false;
 
     private boolean mSurveyListAlreadyShown = false;
 
     private String mToken;
 
-    private FusedLocationProviderClient mFusedLocationClient;
+    private FusedLocationProviderClient mFusedLocationClient = null;
     protected Location mLastLocation = null;
 
     @Override
@@ -67,14 +70,13 @@ public class SurveyListActivity extends BaseActivity {
         setContentView(R.layout.activity_survey_list);
         initToolbar();
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         Bundle extras = getIntent().getExtras();
         mToken = extras.getString(EXTRA_TOKEN, null);
 
         mQuestionnaireList = (RecyclerView) findViewById(R.id.questionnaireList);
 
         mQuestionnaireList.setLayoutManager(new LinearLayoutManager(this));
+        mQuestionnaireList.setAdapter(new SurveyListAdapter(new ArrayList<SurveyModel>(), this));
     }
 
     @Override
@@ -88,21 +90,47 @@ public class SurveyListActivity extends BaseActivity {
 
         mGpsEnabled = checkGpsEnabled();
         mAskedEnableGps = SharedPrefsManager.getInstance(this).getBoolean("AskedEnableGps");
+        mLastLocation = null;
 
         if (!mGpsEnabled && !mAskedEnableGps) {
             showEnableGpsDialog();
         } else {
-            setLocation();
-            if (mDialog == null) {
-                mDialog = InformationDialogFragment.newInstance(R.string.dialog_getting_surveys);
-                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                mDialog.show(fragmentManager, "dialog");
-            } else {
-                mDialog.onResume();
+            boolean requestingRuntimePermissions = false;
+
+            if (mGpsEnabled && mFusedLocationClient == null) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!hasLocationPermission() && !mRequestedRuntimePermissions) {
+                        requestingRuntimePermissions = true;
+                        requestLocationPermission();
+                    }
+                }
+                // If the location permission has been requested the set-up will be done in the
+                // async callback for the permission, otherwise it is done here.
+                if (hasLocationPermission() && !requestingRuntimePermissions) {
+                    setUpLocationSettings();
+                }
+
             }
 
-            fetchAllSurveys();
+            // If the location permission has been requested the initial fetcg will be done in the
+            // async callback for the permission, otherwise it is done here.
+            if (!requestingRuntimePermissions) {
+                triggerFetchingSurveys();
+            }
+
         }
+    }
+
+    private void triggerFetchingSurveys() {
+        if (mDialog == null) {
+            mDialog = InformationDialogFragment.newInstance(R.string.dialog_getting_surveys);
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            mDialog.show(fragmentManager, "dialog");
+        } else {
+            mDialog.onResume();
+        }
+        fetchAllSurveys();
     }
 
     @Override
@@ -130,6 +158,25 @@ public class SurveyListActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void setUpLocationSettings() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (mDialog != null) {
+            mDialog.setMessage(getString(R.string.dialog_waiting_location));
+        }
+        mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                mLastLocation = location;
+                                triggerFetchingSurveys();
+                            }
+                        }
+                    });
     }
 
     private void doLogout() {
@@ -189,11 +236,7 @@ public class SurveyListActivity extends BaseActivity {
         }
 
         if (mLastLocation == null) {
-            if (mGpsEnabled) {
-                mDialog.setMessage(getString(R.string.dialog_waiting_location));
-            } else {
-                showSurveys(mRequestResponse.getSurveys());
-            }
+            showSurveys(mRequestResponse.getSurveys());
         }
     }
 
@@ -208,8 +251,9 @@ public class SurveyListActivity extends BaseActivity {
                 i--;
                 continue;
             }
-            if (!mGpsEnabled) {
-            /* Remove located survey */
+            if ((!mGpsEnabled) ||
+                 (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ! hasLocationPermission())) {
+                /* Remove located survey */
                 if (surveyModelList.get(i).hasCoordinates()){
                     surveyModelList.remove(i);
                     i--;
@@ -277,21 +321,31 @@ public class SurveyListActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void setLocation() {
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission( this.getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = null;
+    private boolean hasLocationPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+    }
+
+    public void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this,
+                                          new String[]{
+                                                  Manifest.permission.ACCESS_FINE_LOCATION
+                                          },
+                                          MY_PERMISSIONS_REQUEST_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                mRequestedRuntimePermissions = true;
+                if (hasLocationPermission()) {
+                    setUpLocationSettings();
+                } else {
+                    triggerFetchingSurveys();
+                }
+            }
         }
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            mLastLocation = location;
-                        }
-                    }
-                });
     }
 }

@@ -86,6 +86,8 @@ public class LoginActivity extends BaseActivity {
             public void onErrorResponse(VolleyError error) {
                 if (error.toString().equals(AUTH_ERROR)) {
                     showAuthenticationError();
+                    focusRequestToUsername();
+                    cleanIfFail();
                 } else {
                     ErrorDialogFragment.OnClickClose onClickClose = new ErrorDialogFragment.OnClickClose() {
                         @Override
@@ -109,6 +111,15 @@ public class LoginActivity extends BaseActivity {
 
 
         NetworkManager.getInstance(this).makeRequest(request);
+    }
+
+    private void cleanIfFail() {
+        mPassword.setText("");
+        mUsername.setText("");
+    }
+
+    private void focusRequestToUsername() {
+        mUsername.requestFocus();
     }
 
     private void showLoginInProgress() {

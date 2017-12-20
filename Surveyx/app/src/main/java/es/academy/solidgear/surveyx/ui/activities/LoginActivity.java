@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 
 import es.academy.solidgear.surveyx.R;
 import es.academy.solidgear.surveyx.managers.NetworkManager;
+import es.academy.solidgear.surveyx.managers.SharedPrefsManager;
 import es.academy.solidgear.surveyx.model.LoginModel;
 import es.academy.solidgear.surveyx.services.requests.UserLoginRequest;
 import es.academy.solidgear.surveyx.ui.fragments.ErrorDialogFragment;
@@ -50,6 +51,12 @@ public class LoginActivity extends BaseActivity {
         Typeface tfMuseum = Typeface.createFromAsset(getAssets(), "fonts/Museo300-Regular.otf");
         mUsername.setTypeface(tfMuseum);
         mPassword.setTypeface(tfMuseum);
+        if(hayLoginAnterior()){
+            mUsername.setText(SharedPrefsManager.getInstance(this).getString("ULTIMOUSUARIO"));
+            mPassword.requestFocus();
+        }
+
+
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +67,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void doLogin() {
+        final String username = mUsername.getText().toString();
 
         showLoginInProgress();
 
@@ -68,6 +76,7 @@ public class LoginActivity extends BaseActivity {
             public void onResponse(LoginModel response) {
                 String token = response.getToken();
                 openMainActivity(token);
+                SharedPrefsManager.getInstance(LoginActivity.this).putString("ULTIMOUSUARIO", username);
                 finish();
             }
         };
@@ -90,12 +99,14 @@ public class LoginActivity extends BaseActivity {
             }
         };
 
-        String username = mUsername.getText().toString();
+
         String password = mPassword.getText().toString();
         UserLoginRequest request = new UserLoginRequest(username,
                                                         password,
                                                         onLoginSuccess,
                                                         onLoginError);
+
+
 
         NetworkManager.getInstance(this).makeRequest(request);
     }
@@ -118,5 +129,12 @@ public class LoginActivity extends BaseActivity {
 
     private void showAuthenticationError() {
         Toast.makeText(LoginActivity.this, "Incorrect login", Toast.LENGTH_LONG).show();
+    }
+
+    private boolean hayLoginAnterior() {
+        if(SharedPrefsManager.getInstance(this).getString("ULTIMOUSUARIO") == null){
+            return false;
+        }
+        return true;
     }
 }

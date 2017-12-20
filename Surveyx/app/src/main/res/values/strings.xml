@@ -26,6 +26,7 @@
     <string name="descriptor_login_user"></string>
     <string name="descriptor_login_pass"></string>
     <string name="descriptor_login_button"></string>
+    <string name="remember_me">Remember me</string>
 
     <!-- DIALOGS -->
     <string name="dialog_gps_title">Activate GPS</string>

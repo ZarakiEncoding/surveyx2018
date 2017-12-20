@@ -19,6 +19,11 @@ import es.academy.solidgear.surveyx.model.LoginModel;
 import es.academy.solidgear.surveyx.services.requests.UserLoginRequest;
 import es.academy.solidgear.surveyx.ui.fragments.ErrorDialogFragment;
 
+import io.fabric.sdk.android.Fabric;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.ContentViewEvent;
+
 /**
  * Created by Siro on 10/12/2014.
  */
@@ -36,6 +41,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
 
         getSupportActionBar().hide();
+
+        Fabric.with(this, new Answers());
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBarLogin);
         mUsername = (EditText) findViewById(R.id.userLoginText);
@@ -119,4 +126,14 @@ public class LoginActivity extends BaseActivity {
     private void showAuthenticationError() {
         Toast.makeText(LoginActivity.this, "Incorrect login", Toast.LENGTH_LONG).show();
     }
+
+    // TODO: Move this method and use your own event name to track your key metrics
+    public void onKeyMetric() {
+        // TODO: Use your own string attributes to track common values over time
+        // TODO: Use your own number attributes to track median value over time
+        Answers.getInstance().logCustom(new CustomEvent("Usuario registrado")
+                .putCustomAttribute("Category", "Comedy")
+                .putCustomAttribute("Length", 350));
+    }
+
 }

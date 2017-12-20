@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 26
@@ -31,4 +46,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:26.1.0"
     compile 'com.google.android.gms:play-services-location:11.6.0'
     compile 'com.google.android.gms:play-services-maps:11.6.0'
+    compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
+        transitive = true;
+    }
 }

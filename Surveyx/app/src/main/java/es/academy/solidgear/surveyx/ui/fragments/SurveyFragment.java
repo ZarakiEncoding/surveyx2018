@@ -6,16 +6,24 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import java.util.List;
+
+import java.util.Random;
+
 
 import es.academy.solidgear.surveyx.R;
 import es.academy.solidgear.surveyx.managers.NetworkManager;
@@ -24,14 +32,15 @@ import es.academy.solidgear.surveyx.model.OptionModel;
 import es.academy.solidgear.surveyx.model.QuestionModel;
 import es.academy.solidgear.surveyx.services.requests.GetQuestionRequest;
 import es.academy.solidgear.surveyx.ui.activities.SurveyActivity;
-import es.academy.solidgear.surveyx.ui.views.AnswerRadioButton;
+import es.academy.solidgear.surveyx.ui.views.AnswerCheckBox;
 
-public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChangeListener{
+public class SurveyFragment extends Fragment implements CheckBox.OnCheckedChangeListener{
     private static final int UNCHECKED_VALUE = -1;
 
     private ViewGroup.LayoutParams PADDING_LAYOUT_PARAMS;
-    private RadioGroup mAnswersOutlet;
     private TextView mQuestionTextView;
+    private LinearLayout layoutRespuestas;
+    private ArrayList<CheckBox> arrayCheck = new ArrayList<CheckBox>();
 
     private ArrayList<Integer> mResponseSelected;
     private int[] mQuestionsId;
@@ -43,6 +52,19 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
     private boolean isRequired = false;
 
     private SurveyActivity mActivity;
+    private static void shuffleArray(int[] ar)
+    {
+        // If running on Java 6 or older, use `new Random()` on RHS here
+        Random rnd = new Random();
+        for (int i = ar.length - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            int a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
+        }
+    }
 
     private void getQuestion(int questionId) {
         Response.Listener<QuestionModel> onGetQuestion = new Response.Listener<QuestionModel>() {
@@ -88,17 +110,15 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
         mResponseSelected = new ArrayList<Integer>();
 
         // show first question
+        shuffleArray(mQuestionsId);
         getQuestion(mQuestionsId[0]);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_survey, null);
 
         mQuestionTextView = (TextView) root.findViewById(R.id.question_text);
-
-        mAnswersOutlet = (RadioGroup) root.findViewById(R.id.answers_outlet);
-        mAnswersOutlet.setOnCheckedChangeListener(this);
+        layoutRespuestas = root.findViewById(R.id.answers_outlet);
 
         return root;
     }
@@ -116,6 +136,10 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
             return;
         }
 
+        for(CheckBox ch : arrayCheck){
+            ch.setChecked(false);
+        }
+
         mIteration++;
         mIsLastQuestion = mIteration == (mQuestionsId.length - 1);
         getQuestion(mQuestionsId[mIteration]);
@@ -123,7 +147,11 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
 
     private void showQuestion(QuestionModel currentQuestion) {
 
-        mAnswersOutlet.removeAllViews();
+        mResponseSelected.clear();
+        if ( mIteration > 0 && mQuestions[mIteration-1] != null ) {
+            mLastRadioButtonId = mLastRadioButtonId + mQuestions[mIteration-1].getChoices().size();
+        }
+
 
         mQuestions[mIteration] = currentQuestion;
 
@@ -131,22 +159,20 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
 
         for (OptionModel option : currentQuestion.getChoices()) {
 
-            // Create radio button with answer
-            AnswerRadioButton radioButton = new AnswerRadioButton(getActivity(), option.getText());
-            radioButton.setTag(option.getId());
+            // Create checkBox with answer
 
-            if ( mIteration > 0 && mQuestions[mIteration-1] != null ) {
-                mLastRadioButtonId = mLastRadioButtonId + mQuestions[mIteration-1].getChoices().size();
-            }
-
-            mAnswersOutlet.clearCheck();
-            mAnswersOutlet.addView(radioButton);
+            AnswerCheckBox checkBox = new AnswerCheckBox(getActivity(), option.getText());
+            checkBox.setTag(option.getId());
+            checkBox.setOnCheckedChangeListener(this);
+            layoutRespuestas.addView(checkBox);
+            arrayCheck.add(checkBox);
 
             // Add padding for each answer
             // There is a bug in API 16 and below that with padding method of RadioButton
             View paddingView = new View(getActivity());
             paddingView.setLayoutParams(PADDING_LAYOUT_PARAMS);
-            mAnswersOutlet.addView(paddingView);
+            layoutRespuestas.addView(paddingView);
+            //mAnswersOutlet.addView(paddingView);
         }
     }
 
@@ -155,16 +181,31 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
     }
 
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        boolean enabled = checkedId != UNCHECKED_VALUE;
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        if (enabled) {
-            mResponseSelected.clear();
-            View radioButton = group.findViewById(group.getCheckedRadioButtonId());
-            mResponseSelected.add((int)radioButton.getTag());
+        if (isChecked) {
+            for(CheckBox ch : arrayCheck){
+                if(ch.isChecked()){
+                    mResponseSelected.add((int)ch.getTag());
+                    break;
+                }
+            }
+            //View checkedButton = buttonView.findViewById((Integer) buttonView.getTag());
         }
-        // cambiar cuando se habilita
-        mActivity.enableNextButton(enabled || !isRequired);
-        mActivity.setNextButtonLabel(mIsLastQuestion);
+
+        for(int i = 0; i < arrayCheck.size(); i++){
+            if(arrayCheck.get(i).isChecked()) {
+                // cambiar cuando se habilita
+                mActivity.enableNextButton(true || !isRequired);
+                mActivity.setNextButtonLabel(true);
+                break;
+            }
+            else if(!arrayCheck.get(i).isChecked() && (i + 1) == arrayCheck.size()){
+                // cambiar cuando se habilita
+                mActivity.enableNextButton(false || !isRequired);
+                mActivity.setNextButtonLabel(false);
+                break;
+            }
+        }
     }
 }

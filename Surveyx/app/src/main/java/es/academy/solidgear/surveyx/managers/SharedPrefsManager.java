@@ -35,6 +35,16 @@ public class SharedPrefsManager {
         editor.commit();
     }
 
+    public String getString(String key) {
+        return this.sharedPreferences.getString(key, null);
+    }
+
+    public void putString(String key, String value) {
+        final SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
     public void remove(String key) {
         final SharedPreferences.Editor editor = this.sharedPreferences.edit();
         editor.remove(key);

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -28,6 +29,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import es.academy.solidgear.surveyx.R;
@@ -182,6 +184,7 @@ public class SurveyListActivity extends BaseActivity {
     private void doLogout() {
         //mAuthManager.setAuthCredentials("", null);
         SharedPrefsManager.getInstance(this).remove("AskedEnableGps");
+        SharedPrefsManager.getInstance(this).remove("rememberMeToken");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

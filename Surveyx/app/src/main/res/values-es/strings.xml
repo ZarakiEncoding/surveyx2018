@@ -18,7 +18,7 @@
     <string name="question_mark">\?</string>
 
     <!-- LOGIN -->
-
+    <string name="remember_me">Recordarme</string>
 
     <!-- DIALOGS -->
     <string name="dialog_gps_title">Activar GPS</string>

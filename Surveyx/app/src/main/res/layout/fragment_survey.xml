@@ -38,13 +38,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <RadioGroup
+                <LinearLayout
                     android:id="@+id/answers_outlet"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                </RadioGroup>
+                </LinearLayout>
 
             </ScrollView>
 

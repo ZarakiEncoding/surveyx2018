@@ -69,6 +69,12 @@ public class LoginActivity extends BaseActivity {
         Typeface tfMuseum = Typeface.createFromAsset(getAssets(), "fonts/Museo300-Regular.otf");
         mUsername.setTypeface(tfMuseum);
         mPassword.setTypeface(tfMuseum);
+        if(hayLoginAnterior()){
+            mUsername.setText(SharedPrefsManager.getInstance(this).getString("ULTIMOUSUARIO"));
+            mPassword.requestFocus();
+        }
+
+
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +85,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void doLogin() {
+        final String username = mUsername.getText().toString();
 
         showLoginInProgress();
         Response.Listener<LoginModel> onLoginSuccess = new Response.Listener<LoginModel>() {
@@ -90,6 +97,7 @@ public class LoginActivity extends BaseActivity {
                 else
                     rememberMeSetToken(null);
                 openMainActivity(token);
+                SharedPrefsManager.getInstance(LoginActivity.this).putString("ULTIMOUSUARIO", username);
                 finish();
             }
         };
@@ -100,6 +108,8 @@ public class LoginActivity extends BaseActivity {
                 rememberMeSetToken(null);
                 if (error.toString().equals(AUTH_ERROR)) {
                     showAuthenticationError();
+                    focusRequestToUsername();
+                    cleanIfFail();
                 } else {
                     ErrorDialogFragment.OnClickClose onClickClose = new ErrorDialogFragment.OnClickClose() {
                         @Override
@@ -113,14 +123,25 @@ public class LoginActivity extends BaseActivity {
             }
         };
 
-        String username = mUsername.getText().toString();
+
         String password = mPassword.getText().toString();
         UserLoginRequest request = new UserLoginRequest(username,
                 password,
                 onLoginSuccess,
                 onLoginError);
 
+
+
         NetworkManager.getInstance(this).makeRequest(request);
+    }
+
+    private void cleanIfFail() {
+        mPassword.setText("");
+        mUsername.setText("");
+    }
+
+    private void focusRequestToUsername() {
+        mUsername.requestFocus();
     }
 
     private void showLoginInProgress() {
@@ -143,11 +164,18 @@ public class LoginActivity extends BaseActivity {
         Toast.makeText(LoginActivity.this, "Incorrect login", Toast.LENGTH_LONG).show();
     }
 
+
     private void rememberMeSetToken(String token) {
         mSharedPref.putString("rememberMeToken", token);
     }
 
     private String rememberMeGetToken() {
         return mSharedPref.getString("rememberMeToken");
+
+    private boolean hayLoginAnterior() {
+        if(SharedPrefsManager.getInstance(this).getString("ULTIMOUSUARIO") == null){
+            return false;
+        }
+        return true;
     }
 }

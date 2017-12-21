@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
+import java.util.Collections;
 import java.util.List;
 
 import es.academy.solidgear.surveyx.R;
@@ -25,6 +26,7 @@ public class SurveyListAdapter extends RecyclerView.Adapter<SurveyListAdapter.Su
 
     public SurveyListAdapter(List<SurveyModel> questionnaireList, SurveyListActivity activity) {
         mSurveyModelList = questionnaireList;
+        Collections.sort(mSurveyModelList);
         mActivity = activity;
     }
 

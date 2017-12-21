@@ -16,6 +16,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import es.academy.solidgear.surveyx.R;
 import es.academy.solidgear.surveyx.managers.NetworkManager;
@@ -87,13 +90,11 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
         // show first question
         getQuestion(mQuestionsId[0]);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_survey, null);
 
         mQuestionTextView = (TextView) root.findViewById(R.id.question_text);
-
         mAnswersOutlet = (RadioGroup) root.findViewById(R.id.answers_outlet);
         mAnswersOutlet.setOnCheckedChangeListener(this);
 

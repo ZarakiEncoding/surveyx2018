@@ -1,6 +1,10 @@
 package es.academy.solidgear.surveyx.model;
 
-public class SurveyModel {
+import android.support.annotation.NonNull;
+
+import java.util.Comparator;
+
+public class SurveyModel implements Comparable<SurveyModel> {
     private int id;
     private boolean already_done;
     private String name;
@@ -85,5 +89,10 @@ public class SurveyModel {
 
     public void setDistanceToCurrentPosition(float distanceToCurrentPosition) {
         this.distanceToCurrentPosition = distanceToCurrentPosition;
+    }
+
+    @Override
+    public int compareTo(@NonNull SurveyModel surveyModel) {
+        return this.getTitle().compareTo(surveyModel.getTitle());
     }
 }

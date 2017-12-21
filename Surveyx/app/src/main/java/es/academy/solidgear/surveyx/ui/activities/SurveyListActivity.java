@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import es.academy.solidgear.surveyx.R;

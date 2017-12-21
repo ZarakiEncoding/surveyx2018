@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/userLoginText"
-                        android:contentDescription="loginUser"
+                        android:contentDescription="@string/descriptor_login_user"
                         android:textColor="@color/white"
                         android:textColorHint="@color/light_grey"
                         android:gravity="left|center_vertical"
@@ -69,7 +69,7 @@
                         android:paddingLeft="30dip"
                         android:maxLines="1"
                         android:inputType="text"
-                        android:hint="username" />
+                        android:hint="@string/login_user_placeholder" />
 
                 </LinearLayout>
 
@@ -92,12 +92,12 @@
                         android:inputType="textPassword"
                         android:ems="10"
                         android:id="@+id/passLoginText"
-                        android:contentDescription="loginPass"
+                        android:contentDescription="@string/descriptor_login_pass"
                         android:textColor="@color/white"
                         android:textColorHint="@color/light_grey"
                         android:gravity="left|center_vertical"
                         android:paddingLeft="30dip"
-                        android:hint="password" />
+                        android:hint="@string/login_pass_placeholder" />
 
                 </LinearLayout>
 
@@ -105,10 +105,10 @@
                         style="@style/loginButton"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="sign in"
+                        android:text="@string/login_button"
                         android:textColor="@color/white"
                         android:id="@+id/login_button"
-                        android:contentDescription="loginButton"
+                        android:contentDescription="@string/login_button"
                         android:layout_marginTop="50dp"
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"

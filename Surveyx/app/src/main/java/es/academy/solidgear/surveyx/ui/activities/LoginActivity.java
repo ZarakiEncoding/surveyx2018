@@ -117,6 +117,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void showAuthenticationError() {
-        Toast.makeText(LoginActivity.this, "Incorrect login", Toast.LENGTH_LONG).show();
+        Toast.makeText(LoginActivity.this, R.string.incorrect_login, Toast.LENGTH_LONG).show();
     }
 }

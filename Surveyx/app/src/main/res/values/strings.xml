@@ -19,13 +19,13 @@
 
     <!-- LOGIN -->
     <string name="login_title"></string>
-    <string name="login_user_placeholder"></string>
-    <string name="login_pass_placeholder"></string>
-    <string name="login_button"></string>
-    <string name="incorrect_login"></string>
-    <string name="descriptor_login_user"></string>
-    <string name="descriptor_login_pass"></string>
-    <string name="descriptor_login_button"></string>
+    <string name="login_user_placeholder">username</string>
+    <string name="login_pass_placeholder">password</string>
+    <string name="login_button">sign in</string>
+    <string name="incorrect_login">Incorrect login</string>
+    <string name="descriptor_login_user">loginUser</string>
+    <string name="descriptor_login_pass">loginPass</string>
+    <string name="descriptor_login_button">loginButton</string>
 
     <!-- DIALOGS -->
     <string name="dialog_gps_title">Activate GPS</string>

@@ -18,7 +18,14 @@
     <string name="question_mark">\?</string>
 
     <!-- LOGIN -->
-
+    <string name="login_title"></string>
+    <string name="login_user_placeholder">nombre de usuario</string>
+    <string name="login_pass_placeholder">contraseña</string>
+    <string name="login_button">Iniciar sesion</string>
+    <string name="incorrect_login">Error al iniciar sesion</string>
+    <string name="descriptor_login_user">Nombre de usuario</string>
+    <string name="descriptor_login_pass">Contraseña de usuario</string>
+    <string name="descriptor_login_button">Iniciar sesion</string>
 
     <!-- DIALOGS -->
     <string name="dialog_gps_title">Activar GPS</string>

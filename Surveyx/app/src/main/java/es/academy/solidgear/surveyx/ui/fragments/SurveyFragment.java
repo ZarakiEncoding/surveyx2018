@@ -40,6 +40,7 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
     private int mLastRadioButtonId = 0;
     private int mIteration = 0;
     private boolean mIsLastQuestion = false;
+    private boolean isRequired = false;
 
     private SurveyActivity mActivity;
 
@@ -47,6 +48,8 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
         Response.Listener<QuestionModel> onGetQuestion = new Response.Listener<QuestionModel>() {
             @Override
             public void onResponse(QuestionModel question) {
+
+                isRequired = question.getRequired();
                 SurveyFragment.this.showQuestion(question);
             }
         };
@@ -120,11 +123,6 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
 
     private void showQuestion(QuestionModel currentQuestion) {
 
-        if ( mIteration > 0 && mQuestions[mIteration-1] != null ) {
-            mLastRadioButtonId = mLastRadioButtonId + mQuestions[mIteration-1].getChoices().size();
-        }
-
-        mAnswersOutlet.clearCheck();
         mAnswersOutlet.removeAllViews();
 
         mQuestions[mIteration] = currentQuestion;
@@ -136,6 +134,12 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
             // Create radio button with answer
             AnswerRadioButton radioButton = new AnswerRadioButton(getActivity(), option.getText());
             radioButton.setTag(option.getId());
+
+            if ( mIteration > 0 && mQuestions[mIteration-1] != null ) {
+                mLastRadioButtonId = mLastRadioButtonId + mQuestions[mIteration-1].getChoices().size();
+            }
+
+            mAnswersOutlet.clearCheck();
             mAnswersOutlet.addView(radioButton);
 
             // Add padding for each answer
@@ -159,8 +163,8 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
             View radioButton = group.findViewById(group.getCheckedRadioButtonId());
             mResponseSelected.add((int)radioButton.getTag());
         }
-
-        mActivity.enableNextButton(enabled);
+        // cambiar cuando se habilita
+        mActivity.enableNextButton(enabled || !isRequired);
         mActivity.setNextButtonLabel(mIsLastQuestion);
     }
 }

@@ -9,6 +9,7 @@ public class QuestionModel {
     private String text;
     private String description;
     private List<OptionModel> choices;
+    private Boolean required;
 
     public int getId() {
         return id;
@@ -57,4 +58,8 @@ public class QuestionModel {
     public void setChoices(List<OptionModel> choices) {
         this.choices = choices;
     }
+
+    public Boolean getRequired() { return required; }
+
+    public void setRequired(Boolean opcional) { this.required = required; }
 }

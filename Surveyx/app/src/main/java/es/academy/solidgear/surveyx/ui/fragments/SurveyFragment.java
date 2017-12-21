@@ -16,6 +16,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import java.util.List;
 
@@ -107,15 +110,12 @@ public class SurveyFragment extends Fragment implements CheckBox.OnCheckedChange
         shuffleArray(mQuestionsId);
         getQuestion(mQuestionsId[0]);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_survey, null);
 
         mQuestionTextView = (TextView) root.findViewById(R.id.question_text);
-
         layoutRespuestas = root.findViewById(R.id.answers_outlet);
-        //mAnswersOutlet.setOnCheckedChangeListener(this);
 
         return root;
     }

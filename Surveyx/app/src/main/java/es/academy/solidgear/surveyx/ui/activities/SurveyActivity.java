@@ -14,6 +14,9 @@ import com.android.volley.VolleyError;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import es.academy.solidgear.surveyx.R;
 import es.academy.solidgear.surveyx.managers.NetworkManager;
@@ -96,7 +99,6 @@ public class SurveyActivity extends BaseActivity {
         NetworkManager.getInstance(this).cancelAll(TAG);
         super.onStop();
     }
-
     private void getSurvey(int surveyId) {
         Response.Listener<SurveyModel> onGetSurvey = new Response.Listener<SurveyModel>() {
             @Override

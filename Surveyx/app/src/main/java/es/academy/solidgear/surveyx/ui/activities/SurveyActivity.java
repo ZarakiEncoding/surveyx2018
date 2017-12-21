@@ -60,6 +60,7 @@ public class SurveyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 performNext();
+
             }
         });
         mButtonNext.setEnabled(false);

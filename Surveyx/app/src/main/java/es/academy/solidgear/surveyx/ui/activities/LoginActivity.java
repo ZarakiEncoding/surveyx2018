@@ -171,7 +171,7 @@ public class LoginActivity extends BaseActivity {
 
     private String rememberMeGetToken() {
         return mSharedPref.getString("rememberMeToken");
-
+    }
     private boolean hayLoginAnterior() {
         if(SharedPrefsManager.getInstance(this).getString("ULTIMOUSUARIO") == null){
             return false;

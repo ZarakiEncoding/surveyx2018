@@ -5,13 +5,12 @@ import android.os.Build;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 
 import es.academy.solidgear.surveyx.R;
 import es.academy.solidgear.surveyx.managers.Utils;
 
-public class AnswerRadioButton extends RadioButton {
-    public AnswerRadioButton(Context context, String option) {
+public class AnswerCheckBox extends android.support.v7.widget.AppCompatCheckBox {
+    public AnswerCheckBox(Context context, String option) {
         super(context);
 
         // Layout params
@@ -22,7 +21,7 @@ public class AnswerRadioButton extends RadioButton {
         setLayoutParams(layoutParams);
 
         // Radio button
-        setButtonDrawable(R.drawable.custom_radio_button);
+        setButtonDrawable(R.drawable.custom_check_box);
 
         // Text
         setText(option);

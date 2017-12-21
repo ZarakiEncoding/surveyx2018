@@ -101,18 +101,29 @@
 
                 </LinearLayout>
 
-                    <Button
-                        style="@style/loginButton"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="sign in"
-                        android:textColor="@color/white"
-                        android:id="@+id/login_button"
-                        android:contentDescription="loginButton"
-                        android:layout_marginTop="50dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:textSize="24dp" />
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rememberCheckBox"
+                    android:buttonTint="@color/white"
+                    android:text="Remember me"/>
+
+                <Button
+                    style="@style/loginButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="sign in"
+                    android:textColor="@color/white"
+                    android:id="@+id/login_button"
+                    android:contentDescription="loginButton"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:textSize="24dp" />
 
                 <ProgressBar
                     style="?android:attr/progressBarStyleSmall"

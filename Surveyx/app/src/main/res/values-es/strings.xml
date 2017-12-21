@@ -25,7 +25,7 @@
     <string name="incorrect_login">Error al iniciar sesion</string>
     <string name="descriptor_login_user">Nombre de usuario</string>
     <string name="descriptor_login_pass">Contraseña de usuario</string>
-    <string name="descriptor_login_button">Iniciar sesion</string>
+    <string name="descriptor_login_button">Iniciar sesión</string>
 
     <!-- DIALOGS -->
     <string name="dialog_gps_title">Activar GPS</string>

@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import es.academy.solidgear.surveyx.R;
 import es.academy.solidgear.surveyx.managers.NetworkManager;
@@ -42,6 +43,19 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
     private boolean mIsLastQuestion = false;
 
     private SurveyActivity mActivity;
+    private static void shuffleArray(int[] ar)
+    {
+        // If running on Java 6 or older, use `new Random()` on RHS here
+        Random rnd = new Random();
+        for (int i = ar.length - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            int a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
+        }
+    }
 
     private void getQuestion(int questionId) {
         Response.Listener<QuestionModel> onGetQuestion = new Response.Listener<QuestionModel>() {
@@ -85,6 +99,7 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
         mResponseSelected = new ArrayList<Integer>();
 
         // show first question
+        shuffleArray(mQuestionsId);
         getQuestion(mQuestionsId[0]);
     }
 
